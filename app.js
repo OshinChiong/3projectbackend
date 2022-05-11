@@ -9,6 +9,9 @@ require ('dotenv/config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var fieldRouter = require('./routes/field');
+var rentalRouter = require('./routes/rental');
+
 
 var app = express();
 
@@ -26,6 +29,9 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/field", fieldRouter);
+app.use("/rental", rentalRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

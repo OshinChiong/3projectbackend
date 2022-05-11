@@ -1,73 +1,68 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const User = require ('../models/User.model')
-const bcrypt = require ('bcryptjs')
-const jwt = require ('jsonwebtoken')
-const isLoggedIn = require('../middleware/isLoggedIn')
+const User = require("../models/User.model");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv/config");
+
+const isLoggedIn = require("../middleware/isLoggedIn");
+
 const saltRounds = 10;
-require('dotenv/config')
-
-
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get("/", function (req, res, next) {
+  res.send("respond with a resource");
 });
 
-router.post('/signup', function(req, res, next) {
-
-  if(!req.body.username || !req.body.password) {
-    return res.json({message: 'please fill out both fields'})
+router.post("/signup", function (req, res, next) {
+  if (!req.body.username || !req.body.password) {
+    return res.json({ message: "Please fill out all fields" });
   }
-
-  User.findOne({username: req.body.username})
-    .then((foundUser)=>{
-
-      if(foundUser) {
-        return res.json({message: 'Username is already taken'})
+  User.findOne({ username: req.body.username })
+    .then((foundUser) => {
+      if (foundUser) {
+        return res.json({ message: "Username is taken" });
       } else {
-
-        const salt = bcrypt.genSaltSync(saltRounds)
-        const hashedPass = bcrypt.hashSync(req.body.password, salt)
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
         User.create({
           username: req.body.username,
-          password: hashedPass
+          password: hashedPassword,
         })
-        .then((createdUser)=>{
-    
-          const payload =  {_id: createdUser._id}
+          .then((createdUser) => {
+         
+            const payload = { _id: createdUser._id };
 
-          const token = jwt.sign(
-            payload,
-            process.env.SECRET,
-            {algorithm: 'HS256', expiresIn: '24hr'}
-          )
-          res.json({token: token})
-          
-        })        
-        .catch((err)=>{
-          res.json(err.message)
-        })
+            const token = jwt.sign(payload, process.env.SECRET, {
+              algorithm: "HS256",
+              expiresIn: "24hr",
+            });
+
+            res.json({ token: token });
+          })
+          .catch((err) => {
+            res.json(err.message);
+          });
       }
     })
-    .catch((err)=>{
-      res.json(err.message)
-    })
+    .catch((err) => {
+      res.json(err.message);
+    });
 });
 
-router.post('/login', function(req, res, next) {
-  if(!req.body.username || !req.body.password) {
-    return res.json({message: 'please fill out both fields'})
+router.post("/login", function (req, res, next) {
+
+  if (!req.body.username || !req.body.password) {
+    return res.json({ message: "Please fill out all fields" });
   }
 
-
-  User.findOne({username: req.body.username})
-    .then((foundUser)=>{
-
-      if(!foundUser) {
-        return res.json({message: 'Username is not found'})
+  User.findOne({ username: req.body.username })
+    .then((foundUser) => {
+      if (!foundUser) {
+        return res.json({ message: "Username or password incorrect" });
       }
+
 
       const doesMatch = bcrypt.compareSync(
         req.body.password,
@@ -75,26 +70,26 @@ router.post('/login', function(req, res, next) {
       );
 
       if (doesMatch) {
-        const payload =  {_id: foundUser._id};
+  
+        const payload = { _id: foundUser._id };
+        const token = jwt.sign(payload, process.env.SECRET, {
+          algorithm: "HS256",
+          expiresIn: "24hr",
+        });
 
-        const token = jwt.sign(
-          payload, process.env.SECRET,
-          {algorithm: 'HS256', expiresIn: '24hr'}
-        )
-        res.json({token: token});
+        res.json({ token: token });
       } else {
-        return res.json({message: 'Username or Password incorrect'})
+        return res.json({ message: "Username or password incorrect" });
       }
     })
-    .catch((err)=>{
-      res.json(err.message)
+    .catch((err) => {
+      res.json(err.message);
     });
-  
 });
 
-router.get('/login-test', isLoggedIn, (req, res)=>{
-  console.log('USER', req.user)
-  res.json({message: "You are logged in"})
-})
+router.get("/login-test", isLoggedIn, (req, res) => {
+  console.log("USER", req.user);
+  res.json({ message: "You are logged in" });
+});
 
 module.exports = router;
