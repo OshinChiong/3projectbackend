@@ -1,23 +1,25 @@
 const { Schema, model } = require("mongoose");
 
 const fieldSchema = new Schema({
-    description: {
+    size: {
         type: String,
+        enum: ["Small 14 players", "Medium 18 players", "Large 22 players"],
+        require: true
       },
       time: {
-        type: Number,
+        type: String,
         require: true,
         
     },
      
     date: {
-        type: Number,
+        type: String,
         require: true,
         
     },
     price: {
         type: Number,
-        require: true,
+        // require: true,
         
     },
     paymentOptions: [
@@ -30,9 +32,9 @@ const fieldSchema = new Schema({
         type: Number,
         require: true,   
     },
-    people: {
+    rental: {
         user: { type: Schema.Types.ObjectId, ref: "User" },
-        field: [{ type: Schema.Types.ObjectId, ref: "Field" }],
+        rental: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
     },
     
 },

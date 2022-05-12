@@ -5,7 +5,12 @@ const Field = require("../models/Field.model");
 
     router.get("/:fieldId", function (req, res, next) {
       Field.findById(req.params.fieldId)
-        .populate("users")
+      .populate({
+      path: "rental",
+      populate: {
+        path: "user",
+      },
+      })
         .then((fieldOptions) => {
           res.json({field: fieldOptions});
         })
@@ -15,7 +20,6 @@ const Field = require("../models/Field.model");
     });
   
     
-   
  
-
+  
   module.exports = router;
