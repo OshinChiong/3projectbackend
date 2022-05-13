@@ -182,8 +182,6 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
     })
       
       router.post("/:rentalId/addUser", isLoggedIn, (req, res) => {
-        //  User.create(req.body)
-
         Rental.findByIdAndUpdate(req.params.rentalId,  {
           $push: {
             people: req.user._id,

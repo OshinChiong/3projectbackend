@@ -16,12 +16,12 @@ router.get("/", function (req, res, next) {
 
 router.post("/signup", function (req, res, next) {
   if (!req.body.username || !req.body.password) {
-    return res.json({ message: "Please fill out all fields" });
+    return res.status(400).json({ message: "Please fill out all fields" });
   }
   User.findOne({ username: req.body.username })
     .then((foundUser) => {
       if (foundUser) {
-        return res.json({ message: "Username is taken" });
+        return res.status(400).json({ message: "Username is taken" });
       } else {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
@@ -47,7 +47,7 @@ router.post("/signup", function (req, res, next) {
       }
     })
     .catch((err) => {
-      res.json(err.message);
+      res.status(400).json(err.message);
     });
 });
 
