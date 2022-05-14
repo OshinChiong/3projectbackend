@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/signup", function (req, res, next) {
-  if (!req.body.username || !req.body.password) {
+  if (!req.body.email || !req.body.username || !req.body.password) {
     return res.status(400).json({ message: "Please fill out all fields" });
   }
   User.findOne({ username: req.body.username })
@@ -27,6 +27,7 @@ router.post("/signup", function (req, res, next) {
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
         User.create({
+          email: req.body.email,
           username: req.body.username,
           password: hashedPassword,
         })
@@ -42,7 +43,7 @@ router.post("/signup", function (req, res, next) {
             res.json({ token: token });
           })
           .catch((err) => {
-            res.json(err.message);
+            res.status(400).json(err.message);
           });
       }
     })
