@@ -17,7 +17,7 @@ const rentalSchema = new Schema(
     },
     time: String,
     date: String,
-    paymentId: String,
+    comment: String,
   },
   {
     timestamps: true,

@@ -14,6 +14,24 @@ const Field = require("../models/Field.model");
         .then((fieldOptions) => {
           res.json({field: fieldOptions});
         })
+
+        .catch((err) => {
+          res.json( err.message);
+        });
+    });
+     
+    router.get("/:allFields", function (req, res, next) {
+      Field.findById(req.params.fieldId)
+      .populate({
+      path: "rental",
+      populate: {
+        path: "user",
+      },
+      })
+        .then((allFields) => {
+          res.json({field: allFields});
+        })
+        
         .catch((err) => {
           res.json( err.message);
         });
@@ -21,5 +39,4 @@ const Field = require("../models/Field.model");
   
     
  
-  
   module.exports = router;

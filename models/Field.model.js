@@ -22,11 +22,11 @@ const fieldSchema = new Schema({
         // require: true,
         
     },
-    paymentOptions: [
-        {
-          type: String,
-        },
-      ],
+    // paymentOptions: [
+    //     {
+    //       type: String,
+    //     },
+    //   ],
 
     players: {
         type: Number,
