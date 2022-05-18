@@ -9,7 +9,6 @@ const fieldSchema = new Schema({
       time: {
         type: String,
         require: true,
-        
     },
   
     price: {
@@ -26,7 +25,6 @@ const fieldSchema = new Schema({
 
         // user: { type: Schema.Types.ObjectId, ref: "User" },
         rental: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
-    
     
 },
 {

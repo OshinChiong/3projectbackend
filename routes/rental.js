@@ -5,7 +5,20 @@ const User = require("../models/User.model");
 const Field = require("../models/Field.model");
 const isLoggedIn = require("../middleware/isLoggedIn");
 
-router.get("/:rentalId", isLoggedIn, function (req, res, next) {
+router.get("/allRentals/:fieldId", isLoggedIn, (req, res) => {
+  Rental.find({field:req.params.fieldId})
+    .then((rentalData) => {
+      console.log("RENTALDATA", rentalData);
+      res.json({ rentalData: rentalData })
+    })
+    .catch((err) => {
+      res.json(err.message);
+    });
+})
+
+
+// get single rental id
+router.get("/:rentalId/single", isLoggedIn, function (req, res, next) {
     Rental.findById(
          req.params.rentalId
     )
@@ -30,29 +43,32 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
       });
   });
   
+    // Create rental based on field id
     router.post("/create/:fieldId", isLoggedIn, function (req, res, next) {
-        const {  time, date, size, price, paymentId } = req.body;
+        const {  time, start, size, price, paymentId } = req.body;
         const field = req.params.fieldId;
         const user = req.user._id;
       
         Rental.create({
             user: user,
             time: req.body.time,
-            date: req.body.date,
-            size: req.body.siz,
+            start: req.body.start,
+            size: req.body.size,
             price: req.body.price,
             field: field
         })
           .then((rentalData) => {
+            console.log("$$$$$", (rentalData))
             User.findByIdAndUpdate(
               req.user._id,
               { $push: { rental: [rentalData._id] },
               }
             )
-            .then(() => {
+            .then((result) => {
               res.json({
                 success: true,
                 rental: rentalData,
+                result
               });
             })
             .catch((err) => {
@@ -60,14 +76,15 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
             });
         })
         .catch((err) => {
+          console.log("ERR", err.message)
           res.json(err.message);
         });
     });
      
-      
-      router.post("/:rentalId", isLoggedIn, function (req, res, next) {
+      // Edit single rental
+      router.post("/:rentalId/edit", isLoggedIn, function (req, res, next) {
         const user = req.user._id ;
-        const { field, time, date, players, size , price, paymentId } = req.body;
+        const { field, time, date, players, size , price } = req.body;
        
         Rental.findByIdAndUpdate(
           req.params.rentalId,
@@ -78,7 +95,6 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
             field,
             size,
             price,
-            paymentId,
             players
           },
           { new: true }
@@ -93,7 +109,8 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
             res.json(err.message);
           });
       });
-       
+
+       // Delete rental
       router.post("/:rentalId/delete", isLoggedIn, function (req, res, next) {
           Rental.findByIdAndRemove(req.params.rentalId)
           .then((rentalData) => {
@@ -125,6 +142,40 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
             });
           });
       });
+        
+      router.get("/allRentals", isLoggedIn, (req, res) => {
+        Rental.find()
+          .then((rentalData) => {
+            console.log("RENTALDATA", rentalData);
+            res.json({ rentalData: rentalData })
+          })
+          .catch((err) => {
+            res.json(err.message);
+          });
+      })
+
+
+    //View Rentals - calendar API
+router.get("/view-calendar", (req, res) => {
+  Rental.find({})
+    .then((foundCalendar) => {
+      res.json(foundCalendar);
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+});
+router.get("/view-rental", (req, res) => {
+  Rental.find({})
+    .then((foundRental) => {
+      res.json(foundRental);
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+});
+
+
 
       router.get("/:rentalId/edit" , isLoggedIn, (req, res) => {
         Rental.findById(req.params.rentalId)
@@ -180,20 +231,12 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
           res.json(err.message);
         });
     })
-    router.get("/userReservations", isLoggedIn, (req, res) => {
-      User.findById(req.user._id)
-      .populate({
-        path: "rental",
-        })
-        .then((rentalData) => {
-          res.json("addUser", { rentalData: rentalData })
-          console.log("RENTALDATA", rentalData);
-        })
-        .catch((err) => {
-          res.json(err.message);
-        });
-    })
+
+    
+ 
       
+
+
       router.post("/:rentalId/addUser", isLoggedIn, (req, res) => {
         Rental.findByIdAndUpdate(req.params.rentalId,  {
           $push: {
