@@ -12,6 +12,7 @@ const userSchema = new Schema({
         require: true,
         
     },
+    rental: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
 
 },
 {

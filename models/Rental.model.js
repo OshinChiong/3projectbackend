@@ -5,16 +5,17 @@ const rentalSchema = new Schema(
   {
    
   people: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  field: [{ type: Schema.Types.ObjectId, ref: "Field" }],
+  user: { type: Schema.Types.ObjectId, ref: "User" },
+  field: { type: Schema.Types.ObjectId, ref: "Field" },
   size: {
       type: String,
       enum: ["Small 14 players", "Medium 18 players", "Large 22 players"],
       require: true
     },
-  price: {
-      type: Number,
-      // require: true,
-    },
+  // price: {
+  //     type: Number,
+  //     // require: true,
+  //   },
     time: String,
     date: String,
     comment: String,

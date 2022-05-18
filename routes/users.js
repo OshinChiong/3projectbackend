@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv/config");
 
 const isLoggedIn = require("../middleware/isLoggedIn");
-
+const fileUploaded = require('../middleware/cloudinary.config');
 const saltRounds = 10;
 
 /* GET users listing. */
@@ -92,5 +92,30 @@ router.get("/login-test", isLoggedIn, (req, res) => {
   console.log("USER", req.user);
   res.json({ message: "You are logged in" });
 });
+
+router.post('/delete-user', isLoggedIn, (req, res, next) => {
+  User.findById(req.user._id) 
+    .then(foundUser=>{
+      const doesMatch = bcrypt.compareSync(req.body.password, foundUser.password)
+      if (doesMatch) {
+        foundUser.delete()
+        res.json({message: "success"})
+      } else {
+        res.status(401).json({message: "password doesn't match"})
+      }
+    })
+    .catch(error=>{
+      res.status(400).json(error.message)
+    })
+  });
+
+// router.get("/new-post",isLoggedIn, function (req, res, next) {
+//   res.render("create-post");
+// });
+
+
+
+
+
 
 module.exports = router;

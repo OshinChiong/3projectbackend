@@ -30,22 +30,22 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
       });
   });
   
-    router.post("/create", isLoggedIn, function (req, res, next) {
+    router.post("/create/:fieldId", isLoggedIn, function (req, res, next) {
         const {  time, date, size, price, paymentId } = req.body;
-        const field = req.body.fieldId;
-        const user = req.userId;
+        const field = req.params.fieldId;
+        const user = req.user._id;
       
         Rental.create({
-            user,
-            time,
-            date,
-            size,
-            price,
-            paymentId,
+            user: user,
+            time: req.body.time,
+            date: req.body.date,
+            size: req.body.siz,
+            price: req.body.price,
+            field: field
         })
           .then((rentalData) => {
-            User.updateOne(
-              { username: req.user.username },
+            User.findByIdAndUpdate(
+              req.user._id,
               { $push: { rental: [rentalData._id] },
               }
             )
@@ -175,6 +175,19 @@ router.get("/:rentalId", isLoggedIn, function (req, res, next) {
       User.findById(req.params.id)
         .then((rentalData) => {
           res.json("addUser", { rentalData: rentalData });
+        })
+        .catch((err) => {
+          res.json(err.message);
+        });
+    })
+    router.get("/userReservations", isLoggedIn, (req, res) => {
+      User.findById(req.user._id)
+      .populate({
+        path: "rental",
+        })
+        .then((rentalData) => {
+          res.json("addUser", { rentalData: rentalData })
+          console.log("RENTALDATA", rentalData);
         })
         .catch((err) => {
           res.json(err.message);

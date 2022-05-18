@@ -11,31 +11,22 @@ const fieldSchema = new Schema({
         require: true,
         
     },
-     
-    date: {
-        type: String,
-        require: true,
-        
-    },
+  
     price: {
         type: Number,
         // require: true,
         
     },
-    // paymentOptions: [
-    //     {
-    //       type: String,
-    //     },
-    //   ],
+  
 
     players: {
         type: Number,
         require: true,   
     },
-    rental: {
-        user: { type: Schema.Types.ObjectId, ref: "User" },
+
+        // user: { type: Schema.Types.ObjectId, ref: "User" },
         rental: [{ type: Schema.Types.ObjectId, ref: "Rental" }],
-    },
+    
     
 },
 {
