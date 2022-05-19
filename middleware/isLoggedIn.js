@@ -1,6 +1,7 @@
 const jwt = require ('jsonwebtoken')
 
 const isLoggedIn = async (req, res, next) => {
+  console.log("INSIDE IS LOGGED IN")
     const token = req.headers.authorization?.split(" ")[1];
       if (!token || token === "null") {
         console.log("NO TOKEN");
@@ -12,8 +13,10 @@ const isLoggedIn = async (req, res, next) => {
         //If you have req.payload, change line 12 to:
         //req.payload = tokenInfo;
         req.user = tokenInfo;
+        console.log("Success")
         next();
       } catch (error) {
+        console.log("BROKE AT MIDDLEWARE", error)
         return res.json(error);
       }
     };

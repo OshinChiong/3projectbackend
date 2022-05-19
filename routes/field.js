@@ -20,23 +20,6 @@ const Field = require("../models/Field.model");
         });
     });
      
-    // router.get("/allFields", function (req, res, next) {
-    //   Field.find()
-    //   .populate({
-    //   path: "rental",
-    //   populate: {
-    //     path: "user",
-    //   },
-    //   })
-    //     .then((allFields) => {
-    //       res.json({field: allFields});
-    //     })
-        
-    //     .catch((err) => {
-    //       res.json( err.message);
-    //     });
-    // });
-
 
     router.get("/view-all", (req, res) => {
       Field.find()

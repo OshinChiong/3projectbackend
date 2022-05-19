@@ -55,13 +55,13 @@ router.post("/signup", function (req, res, next) {
 router.post("/login", function (req, res, next) {
 
   if (!req.body.username || !req.body.password) {
-    return res.json({ message: "Please fill out all fields" });
+    return res.status(400).json({ message: "Please fill out all fields" });
   }
 
   User.findOne({ username: req.body.username })
     .then((foundUser) => {
       if (!foundUser) {
-        return res.json({ message: "Username or password incorrect" });
+        return res.status(400).json({ message: "Username or password incorrect" });
       }
 
 
@@ -80,15 +80,19 @@ router.post("/login", function (req, res, next) {
 
         res.json({ token: token });
       } else {
-        return res.json({ message: "Username or password incorrect" });
+        return res.status(400).json({ message: "Username or password incorrect" });
       }
     })
     .catch((err) => {
-      res.json(err.message);
+      res.status(400).status(400).json(err.message);
     });
 });
 
-router.get("/login-test", isLoggedIn, (req, res) => {
+// router.get("/login-test", isLoggedIn, (req, res) => {
+//   console.log("USER", req.user);
+//   res.json({ message: "You are logged in" });
+// });
+router.get("/login", isLoggedIn, (req, res) => {
   console.log("USER", req.user);
   res.json({ message: "You are logged in" });
 });
