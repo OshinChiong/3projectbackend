@@ -92,6 +92,7 @@ router.post("/login", function (req, res, next) {
 //   console.log("USER", req.user);
 //   res.json({ message: "You are logged in" });
 // });
+
 router.get("/login", isLoggedIn, (req, res) => {
   console.log("USER", req.user);
   res.json({ message: "You are logged in" });
