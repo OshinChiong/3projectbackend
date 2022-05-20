@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
   // origin: [http://localhost:5001]
 
-  // origin: [process.env.FRONTEND_URL]
+  origin: [process.env.FRONTEND_URL]
  
   // origin: ["http://localhost:5001"] //in case yu want the frontend be the localhost so i have to back and for
 }));
