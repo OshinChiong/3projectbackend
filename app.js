@@ -26,8 +26,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
-  origin: [process.env.FRONTEND_URL]
-  // origin: [http://localhost:5001] in case yu want the frontend be the localhost so i have to back and for
+  // origin: [http://localhost:5001]
+
+  // origin: [process.env.FRONTEND_URL]
+ 
+  // origin: ["http://localhost:5001"] //in case yu want the frontend be the localhost so i have to back and for
 }));
 
 app.use('/', indexRouter);

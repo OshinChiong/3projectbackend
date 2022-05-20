@@ -88,15 +88,15 @@ router.post("/login", function (req, res, next) {
     });
 });
 
-// router.get("/login-test", isLoggedIn, (req, res) => {
-//   console.log("USER", req.user);
-//   res.json({ message: "You are logged in" });
-// });
-
-router.get("/login", isLoggedIn, (req, res) => {
+router.get("/login-test", isLoggedIn, (req, res) => {
   console.log("USER", req.user);
   res.json({ message: "You are logged in" });
 });
+
+// router.get("/login", isLoggedIn, (req, res) => {
+//   console.log("USER", req.user);
+//   res.json({ message: "You are logged in" });
+// });
 
 router.post('/delete-user', isLoggedIn, (req, res, next) => {
   User.findById(req.user._id) 
@@ -114,9 +114,7 @@ router.post('/delete-user', isLoggedIn, (req, res, next) => {
     })
   });
 
-// router.get("/new-post",isLoggedIn, function (req, res, next) {
-//   res.render("create-post");
-// });
+
 
 
 
