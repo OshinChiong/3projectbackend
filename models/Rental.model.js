@@ -8,10 +8,6 @@ const rentalSchema = new Schema(
   user: { type: Schema.Types.ObjectId, ref: "User" },
   field: { type: Schema.Types.ObjectId, ref: "Field" },
  
-  // price: {
-  //     type: Number,
-  //     // require: true,
-  //   },
     time: String,
     start: String,
     comment: String,

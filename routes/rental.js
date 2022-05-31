@@ -247,7 +247,7 @@ router.post("/:rentalId/addUser", isLoggedIn, (req, res) => {
     },
     { new: true }
   ).then((rentalData) => {
-    console.log("RENTAL", rentalData);
+    // console.log("RENTAL", rentalData);
     User.findByIdAndUpdate(
       req.user._id,
       {
